@@ -2,47 +2,26 @@ from cheat import Cheat
 from cooperate import Cooperate
 from copycat import Copycat
 import itertools
+import random
 
 generation = 10
 rounds = 5
 
 reward = 3
 
-cheaters = 5
-naive = 15
-copycat = 10
-
 players = []
 
-for i in range(copycat):
-    players.append(Copycat())
+# initialize at least 10 players
+players.append(Cheat(""))
+players.append(Cheat(""))
+players.append(Cheat(""))
 
-for i in range(cheaters):
-    players.append(Cheat())
-
-for i in range(naive):
-    players.append(Cooperate())
 
 # for each generation
 for g in range(generation):
     print("Generation ",g)
-    # print how much of each agent type is alive
-    cheat = 0
-    coop = 0
-    copy = 0
-    for p in range(len(players)):
-        if type(players[p]) == type(Cheat()):
-            cheat +=1
-        elif type(players[p]) == type(Cooperate()):
-            coop += 1
-        elif type(players[p]) == type(Copycat()):
-            copy += 1
 
-    print("Cheaters : \t", cheat)
-    print("Cooperators : \t", coop)
-    print("Copycat : \t", copy)
-
-    print("\n")
+    random.shuffle(players)
 
     # we have each player play 5 rounds against each others
     for p1, p2 in itertools.combinations(players, 2):
@@ -64,15 +43,35 @@ for g in range(generation):
 
     players.sort(key=lambda x: x.coins, reverse=True)
 
+    # print how much of each agent type is alive
+    cheat = 0
+    coop = 0
+    copy = 0
+    for p in range(len(players)):
+        if type(players[p]) == type(Cheat('')):
+            cheat +=1
+            print("Player ",p,"\t Strategy : Cheat \t Name : ",players[p].name, "\t Coins ",players[p].coins)
+        elif type(players[p]) == type(Cooperate('')):
+            print("Player ",p,"\t Strategy : Cooperate\t Name : ",players[p].name, "\t Coins ",players[p].coins)
+            coop += 1
+        elif type(players[p]) == type(Copycat('')):
+            print("Player ",p,"\t Strategy : Copycat\t Name : ",players[p].name, "\t Coins ",players[p].coins)
+            copy += 1
+    print("\n")
+
+    #print("Cheaters : \t", cheat)
+    #print("Cooperators : \t", coop)
+    #print("Copycat : \t", copy)
+
     # reproduce the five top
     # kill the five last
     for w in range(5):
-        if type(players[w]) == type(Cheat()):
-            players[len(players)-w-1] = Cheat()
-        elif type(players[w]) == type(Cooperate()):
-            players[len(players)-w-1] = Cooperate()
-        elif type(players[w]) == type(Copycat()):
-            players[len(players)-w-1] = Copycat()
+        if type(players[w]) == type(Cheat('')):
+            players[len(players)-w-1] = Cheat(players[w].name)
+        elif type(players[w]) == type(Cooperate('')):
+            players[len(players)-w-1] = Cooperate(players[w].name)
+        elif type(players[w]) == type(Copycat('')):
+            players[len(players)-w-1] = Copycat(players[w].name)
 
     # reset coins
     for p in range(len(players)):
